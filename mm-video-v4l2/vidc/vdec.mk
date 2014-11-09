@@ -95,16 +95,24 @@ libmm-vdec-inc          := bionic/libc/include
 libmm-vdec-inc          += bionic/libstdc++/include
 libmm-vdec-inc          += $(LOCAL_PATH)/vdec/inc
 libmm-vdec-inc          += $(OMX_VIDEO_PATH)/vidc/common/inc
-libmm-vdec-inc          += hardware/qcom/media/mm-core/inc
+libmm-vdec-inc          += $(call project-path-for,qcom-media)/$(TARGET_BOARD_PLATFORM)/mm-core/inc
 #DRM include - Interface which loads the DRM library
 libmm-vdec-inc	        += $(OMX_VIDEO_PATH)/DivxDrmDecrypt/inc
-libmm-vdec-inc          += $(TARGET_OUT_HEADERS)/qcom/display
-libmm-vdec-inc          += $(TARGET_OUT_HEADERS)/adreno
+libmm-vdec-inc          += $(call project-path-for,qcom-display)/$(TARGET_BOARD_PLATFORM)/libgralloc
 libmm-vdec-inc          += frameworks/native/include/media/openmax
 libmm-vdec-inc          += frameworks/native/include/media/hardware
 libmm-vdec-inc          += $(vdec-inc)
-libmm-vdec-inc      += hardware/qcom/media/libc2dcolorconvert
+libmm-vdec-inc          += $(call project-path-for,qcom-display)/$(TARGET_BOARD_PLATFORM)/libqdutils
+libmm-vdec-inc      += $(call project-path-for,qcom-media)/$(TARGET_BOARD_PLATFORM)/libc2dcolorconvert
+libmm-vdec-inc      += $(call project-path-for,qcom-display)/$(TARGET_BOARD_PLATFORM)/libcopybit
 libmm-vdec-inc      += frameworks/av/include/media/stagefright
+libmm-vdec-inc      += $(TARGET_OUT_HEADERS)/mm-video/SwVdec
+libmm-vdec-inc      += $(TARGET_OUT_HEADERS)/qcom/display/
+
+ifneq ($(call is-platform-sdk-version-at-least, 19),true)
+libOmxVdec-def += -DMETADATA_FOR_DYNAMIC_MODE
+libmm-vdec-inc += $(call project-path-for,qcom-media)/$(TARGET_BOARD_PLATFORM)/libstagefrighthw
+endif
 
 
 LOCAL_MODULE                    := libOmxVdec
@@ -127,9 +135,9 @@ ifneq ($(filter msm8974 msm8610 msm8226 msm8084 mpq8092,$(TARGET_BOARD_PLATFORM)
 LOCAL_SRC_FILES         += vdec/src/omx_vdec_msm8974.cpp
 else
 LOCAL_SHARED_LIBRARIES  += libhardware
-libmm-vdec-inc          += $(TARGET_OUT_HEADERS)/qcom/display
-LOCAL_SRC_FILES         += vdec/src/power_module.cpp
-LOCAL_SRC_FILES         += vdec/src/omx_vdec.cpp
+libmm-vdec-inc          += $(call project-path-for,qcom-display)/$(TARGET_BOARD_PLATFORM)/libhwcomposer
+LOCAL_SRC_FILES         += src/power_module.cpp
+LOCAL_SRC_FILES         += src/omx_vdec.cpp
 endif
 
 LOCAL_SRC_FILES         += common/src/extra_data_handler.cpp
@@ -182,8 +190,8 @@ endif
 # ---------------------------------------------------------------------------------
 include $(CLEAR_VARS)
 
-mm-vdec-test-inc    := hardware/qcom/media/mm-core/inc
-mm-vdec-test-inc    += $(LOCAL_PATH)/vdec/inc
+mm-vdec-test-inc    := $(call project-path-for,qcom-media)/$(TARGET_BOARD_PLATFORM)/mm-core/inc
+mm-vdec-test-inc    += $(LOCAL_PATH)/inc
 mm-vdec-test-inc    += $(vdec-inc)
 
 LOCAL_MODULE                    := mm-vdec-omx-test
@@ -204,8 +212,8 @@ LOCAL_SRC_FILES           += vdec/test/omx_vdec_test.cpp
 # ---------------------------------------------------------------------------------
 include $(CLEAR_VARS)
 
-mm-vdec-drv-test-inc    := hardware/qcom/media/mm-core/inc
-mm-vdec-drv-test-inc    += $(LOCAL_PATH)/vdec/inc
+mm-vdec-drv-test-inc    := $(call project-path-for,qcom-media)/$(TARGET_BOARD_PLATFORM)/mm-core/inc
+mm-vdec-drv-test-inc    += $(LOCAL_PATH)/inc
 mm-vdec-drv-test-inc    += $(vdec-inc)
 
 LOCAL_MODULE                    := mm-video-driver-test
