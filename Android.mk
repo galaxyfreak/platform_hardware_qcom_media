@@ -1,4 +1,5 @@
 QCOM_MEDIA_ROOT := $(call my-dir)
+MSM_VIDC_TARGET_LIST := msm8974 msm8610 msm8226 apq8084 msm8916 msm8994 msm8909
 $(warning target list is : $(MSM_VIDC_TARGET_LIST))
 
 #Compile these for all targets under QCOM_BOARD_PLATFORMS list.
